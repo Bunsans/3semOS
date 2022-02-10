@@ -75,12 +75,12 @@ int main(int argc, char *argv[])
         perror("Failed to fsync");
         err = -1;
     }
-    if (fchmod(dst_fd, stat_buf.st_mode & ALLPERMS) == -1)
+    if (fchmod(dst_fd, stat_buf.st_mode & ALLPERMS) == -1) //разрешения
     {
         perror("Failed to fchmod");
         err = -1;
     }
-    if (futimens(dst_fd, am_time) == -1)
+    if (futimens(dst_fd, am_time) == -1) 
     {
         perror("Failed to futimens");
         err = -1;

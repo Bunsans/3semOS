@@ -7,7 +7,7 @@
 #include <time.h>
 
 void handler(int sig) {
-    
+
 }
 
 int main(void)
@@ -19,10 +19,10 @@ int main(void)
     struct sigaction universal_sa = {};
     universal_sa.sa_handler = &handler;
 
-    sigemptyset(&universal_sa.sa_mask);
+    sigemptyset(&universal_sa.sa_mask);//инициализирует набор сигналов, пустым, при этом все сигналы исключаются из набора.
     
     for (int sig_num = 1; sig_num <= NSIG; sig_num++)
-        if (sigaction(sig_num, &universal_sa, NULL)) {
+        if (sigaction(sig_num, &universal_sa, NULL)) {//для каждого сигнала меняем поведение
             perror("sigaction");
             psignal(sig_num, NULL);
         }

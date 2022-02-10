@@ -9,6 +9,7 @@ int main(int argc, char const *argv[]) {
         //argv
         "grep", argc > 1 ? argv[1] : "model name", "/proc/cpuinfo", NULL
         );
+        
     perror("failed to exec grep");
     return 0;    
 }
