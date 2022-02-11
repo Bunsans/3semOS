@@ -16,6 +16,7 @@ struct filetype {
 };
 
 #define MAKE_FILETYPE(description, c) (const struct filetype) {(description), (c)}
+
 struct filetype get_file_type(mode_t mode) {
     switch (mode & S_IFMT) {
         case S_IFBLK:  return MAKE_FILETYPE("block device", 'b');
@@ -64,7 +65,7 @@ int main(int argc, char *argv[]) {
         exit(1);
     }
 
-    if (lstat(pathname, &sb) == -1) {
+    if (lstat(pathname, &sb) == -1) {  
         perror("lstat");
         exit(1);
     }
