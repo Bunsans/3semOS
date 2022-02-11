@@ -44,7 +44,7 @@ void format_mode(char * buf, mode_t mode) {
 
     //0123456789
     //?rwxrwxrwx
-    if(mode & S_ISUID) {
+    if(mode & S_ISUID) {//проверка на UID
         buf[3] = 's';
     }
     if(mode & S_ISGID) {
