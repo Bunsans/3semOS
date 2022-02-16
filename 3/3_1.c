@@ -7,7 +7,7 @@
 #include <sys/stat.h>
 #include <sys/sysmacros.h>
 
-#define BUF_SIZE 1024 * 1024
+#define BUF_SIZE (1024*1024)
 
 int main(int argc, char const *argv[])
 {
@@ -26,20 +26,20 @@ int main(int argc, char const *argv[])
         return 2;
     }
 
-    if ((sb.st_mode & S_IFMT) != S_IFREG)
+    if (!S_ISREG(sb.st_mode)) // проверка на регулярность
     {
-        perror("Not a regular file");
+        fprintf(stderr, "Not a regular file\n");
         return 3;
     }
 
-    int fd1 = open(argv[1], O_RDONLY);
+    int fd1 = open(argv[1], O_RDONLY); // открываем первый файл
     if (fd1 < 0)
     {
         perror("Failed to open src file");
         return 4;
     }
     // 0644 - r/w for user, read-only for group and others
-    int fd2 = open(argv[2], O_RDWR | O_CREAT | O_TRUNC, 0644);
+    int fd2 = open(argv[2], O_RDWR | O_CREAT | O_TRUNC, 0644); // открываем второй
     if (fd2 < 0)
     {
         perror("Failed to open or create dest file");
@@ -50,13 +50,12 @@ int main(int argc, char const *argv[])
     char buf[BUF_SIZE];
     ssize_t nbytes, nbytes_w;
 
-    off_t offset_r = 0, offset_w = 0;
-    while ((nbytes = read(fd1, &buf + offset_r, sb.st_size)) > 0) // считываем sb.st_size байтов из fd1 начиная с &buf + offset_r
+    while ((nbytes = read(fd1, buf, sizeof(buf))) > 0) // считываем sb.st_size байтов из fd1 начиная с &buf + offset_r
     {
-        offset_r += nbytes; // увеличиваем смещение
+        off_t offset_w = 0;
         while (nbytes)
         {
-            nbytes_w = write(fd2, &buf + offset_w, (long unsigned)nbytes); // записываем nbytes байтов в fd2 начиная с &buf + offset_w
+            nbytes_w = write(fd2, buf + offset_w, (size_t)nbytes); // записываем nbytes байтов в fd2 начиная с &buf + offset_w
             if (nbytes_w == -1)
             {
                 close(fd1);
